@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="icon" href="/static/favicon.svg">
+    <link rel="script" href="/static/jquery-3.7.0.min.js">
+</head>
+<body>
+<div class="container">
+    <h3>随身WiFi 面板</h3>
+    <div class="row row-cols-sm-auto">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">移动网络</div>
+                <div class="card-body">
+                    <p class="card-text">移动网络状态： {{ state }}</p>
+                    <p class="card-text">移动网络信号： {{ signal }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">网络控制</div>
+                <div class="card-body">
+                    <p class="card-text">Wlan0状态： {{ wifi }}</p>
+                    <p class="card-text">usb0状态： {{ usb }}</p>
+                    <a href="/wifi_switch/" class="btn btn-primary">Wlan0切换</a>
+                    <a href="/usb_switch/" class="btn btn-primary">usb0切换</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">系统</div>
+                <div class="card-body">
+                    <div class="card-text">操作系统： {{ os_name }}</div>
+                    <div class="card-text">主机名： {{ host_name }}</div>
+                    <div class="card-text">内核版本： {{ kernel }}</div>
+                    <div class="card-text">处理器架构： {{ arch }}</div>
+                    <a href="/reboot/" class="btn btn-warning">重启设备</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">关于</div>
+                <div class="card-body">
+                    <p class="card-text">Running on OpenStick103s</p>
+                    <p class="card-text">Powered By <a href="https://gitee.com/dw-yang">DW_yang</a></p>
+                    <p class="card-text"><a href="/logout/" class="btn btn-close"></a><a href="/logout/">登出账户</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
