@@ -1,5 +1,6 @@
-from flask import Flask,render_template
 import os
+
+from flask import Flask, render_template
 
 app = Flask(__name__)
 state_cmd = "mmcli -m 0|grep -w '  state'|awk '{print $3}'"
@@ -49,9 +50,10 @@ def root():
             "arch": arch,
             "wifi": wifi,
             "usb": usb}
-    return render_template("index.html", args)
+    return render_template("index.html", **args)
 
 
+@app.route('/wifi_switch', methods=['POST'])
 def wifi_switch():
     state_result = cmd(ap_status_cmd)
     if state_result.find("已连接") >= 0:
@@ -60,11 +62,20 @@ def wifi_switch():
         state = 0
     if state == 1:
         os.system("nmcli d disconnect wlan0")
+        resp = {
+            "action": "disconnect wlan0"
+        }
+        return resp
     else:
         os.system("nmcli d connect wlan0")
+        resp = {
+            "action": "connect wlan0"
+        }
+        return resp
 
 
-def usb_switch(request):
+@app.route('/usb_switch', methods=['POST'])
+def usb_switch():
     state_result = cmd(usb_status_cmd)
     if state_result.find("已连接") >= 0:
         state = 1
@@ -72,13 +83,26 @@ def usb_switch(request):
         state = 0
     if state == 1:
         os.system("nmcli d disconnect usb0")
+        resp = {
+            "action": "disconnect usb0"
+        }
+        return resp
     else:
         os.system("nmcli d connect usb0")
+        resp = {
+            "action": "connect usb0"
+        }
+        return resp
 
 
+@app.route('/reboot', methods = ['POST'])
 def reboot():
-    os.system("reboot")
+    os.system("sleep 2s && reboot")
+    resp = {
+        "action": "reboot"
+    }
+    return resp
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=80)

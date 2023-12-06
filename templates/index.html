@@ -6,7 +6,7 @@
     <title>Panel</title>
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="icon" href="/static/favicon.svg">
-    <link rel="script" href="/static/jquery-3.7.0.min.js">
+    <script src="/static/jquery-3.7.0.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -27,8 +27,8 @@
                 <div class="card-body">
                     <p class="card-text">Wlan0状态： {{ wifi }}</p>
                     <p class="card-text">usb0状态： {{ usb }}</p>
-                    <a href="/wifi_switch/" class="btn btn-primary">Wlan0切换</a>
-                    <a href="/usb_switch/" class="btn btn-primary">usb0切换</a>
+                    <button id="wifi" class="btn btn-primary">Wlan0切换</button>
+                    <button id="usb" class="btn btn-primary">usb0切换</button>
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
                     <div class="card-text">主机名： {{ host_name }}</div>
                     <div class="card-text">内核版本： {{ kernel }}</div>
                     <div class="card-text">处理器架构： {{ arch }}</div>
-                    <a href="/reboot/" class="btn btn-warning">重启设备</a>
+                    <button id="reboot" class="btn btn-warning">重启设备</button>
                 </div>
             </div>
         </div>
@@ -48,13 +48,32 @@
             <div class="card">
                 <div class="card-header">关于</div>
                 <div class="card-body">
-                    <p class="card-text">Running on OpenStick103s</p>
+                    <p class="card-text">Running on {{ host_name }}</p>
                     <p class="card-text">Powered By <a href="https://gitee.com/dw-yang">DW_yang</a></p>
-                    <p class="card-text"><a href="/logout/" class="btn btn-close"></a><a href="/logout/">登出账户</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $("#wifi").click(function(){
+        $.post("/wifi_switch",{},function(resp){
+            console.log(resp)
+            window.location.reload()
+        })
+    })
+    $('#usb').click(function(){
+        $.post("/usb_switch",{},function(resp){
+            console.log(resp)
+            window.location.reload()
+        })
+    })
+    $('#reboot').click(function (){
+        $.post("/reboot",{},function (resp) {
+            console.log(resp)
+            alert("reboot")
+        })
+    })
+</script>
 </body>
 </html>
