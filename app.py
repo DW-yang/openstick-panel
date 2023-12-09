@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template
 
 app = Flask(__name__)
+
 state_cmd = "mmcli -m 0|grep -w '  state'|awk '{print $3}'"
 signal_cmd = "mmcli -m 0|grep signal|awk '{print $4}'"
 os_name_cmd = "uname -o"
@@ -13,6 +14,7 @@ ap_status_cmd = "nmcli|grep wlan0:"
 usb_status_cmd = "nmcli|grep usb0:"
 
 
+# 运行系统命令函数
 def cmd(command):
     fr = os.popen(command)
     result = fr.read()
@@ -53,6 +55,7 @@ def root():
     return render_template("index.html", **args)
 
 
+# wlan切换函数
 @app.route('/wifi_switch', methods=['POST'])
 def wifi_switch():
     state_result = cmd(ap_status_cmd)
@@ -74,6 +77,7 @@ def wifi_switch():
         return resp
 
 
+# usb切换函数
 @app.route('/usb_switch', methods=['POST'])
 def usb_switch():
     state_result = cmd(usb_status_cmd)
@@ -95,7 +99,19 @@ def usb_switch():
         return resp
 
 
-@app.route('/reboot', methods = ['POST'])
+# Modem重启函数
+@app.route('/restart_modem', methods=['POST'])
+def restart_modem():
+    cmd("systemctl restart rmtfs")
+    cmd("systemctl restart ModemManager")
+    resp = {
+        "action": "restart modem"
+    }
+    return resp
+
+
+# 系统重启函数
+@app.route('/reboot', methods=['POST'])
 def reboot():
     os.system("sleep 2s && reboot")
     resp = {
