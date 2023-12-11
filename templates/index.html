@@ -21,7 +21,7 @@
             <div class="card">
                 <div class="card-header">移动网络</div>
                 <div class="card-body">
-                    <p class="card-text">移动网络状态： {{ state }}</p>
+                    <p class="card-text">移动网络状态： <a id="modem_state">{{ state }}</a></p>
                     <p class="card-text">移动网络信号： {{ signal }}</p>
                     <p class="card-text"><button id="modem" class="btn btn-warning">重启Modem</button></p>
                 </div>
@@ -64,28 +64,38 @@
 <script>
     $("#wifi").click(function(){
         $.post("/wifi_switch",{},function(resp){
+            const res = JSON.parse(resp);
             window.location.reload()
-            console.log(resp)
+            console.log(res.result)
         })
     })
     $('#usb').click(function(){
         $.post("/usb_switch",{},function(resp){
+            const res = JSON.parse(resp);
             window.location.reload()
-            console.log(resp)
+            console.log(res.result)
         })
     })
     $('#modem').click(function (){
         $.post("/restart_modem",{},function(resp){
-            console.log(resp)
-            alert("5秒后将自动刷新页面")
+            const res = JSON.parse(resp);
+            console.log(res.result)
             setTimeout(function () {
                 window.location.reload()
             }, 5000)
+            alert("5秒后将自动刷新页面")
+        })
+    })
+    $('#modem_state').click(function (){
+        $.post("/modem_state",{},function (resp) {
+            const res = JSON.parse(resp);
+            alert(res.result)
         })
     })
     $('#reboot').click(function (){
         $.post("/reboot",{},function (resp) {
-            console.log(resp)
+            const res = JSON.parse(resp);
+            console.log(res.result)
             alert("reboot")
         })
     })

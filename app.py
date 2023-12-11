@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask, render_template
 
@@ -64,17 +65,19 @@ def wifi_switch():
     else:
         state = 0
     if state == 1:
-        os.system("nmcli d disconnect wlan0")
+        result = cmd("nmcli d disconnect wlan0")
         resp = {
-            "action": "disconnect wlan0"
+            "action": "disconnect wlan0",
+            "result": result
         }
-        return resp
+        return json.dumps(resp)
     else:
-        os.system("nmcli d connect wlan0")
+        result = cmd("nmcli d connect wlan0")
         resp = {
-            "action": "connect wlan0"
+            "action": "connect wlan0",
+            "result": result
         }
-        return resp
+        return json.dumps(resp)
 
 
 # usb切换函数
@@ -86,28 +89,31 @@ def usb_switch():
     else:
         state = 0
     if state == 1:
-        os.system("nmcli d disconnect usb0")
+        result = cmd("nmcli d disconnect usb0")
         resp = {
-            "action": "disconnect usb0"
+            "action": "disconnect usb0",
+            "result": result
         }
-        return resp
+        return json.dumps(resp)
     else:
-        os.system("nmcli d connect usb0")
+        result = cmd("nmcli d connect usb0")
         resp = {
-            "action": "connect usb0"
+            "action": "connect usb0",
+            "result": result
         }
-        return resp
+        return json.dumps(resp)
 
 
 # Modem重启函数
 @app.route('/restart_modem', methods=['POST'])
 def restart_modem():
-    cmd("systemctl restart rmtfs")
-    cmd("systemctl restart ModemManager")
+    result = cmd("systemctl restart rmtfs")
+    result += cmd("systemctl restart ModemManager")
     resp = {
-        "action": "restart modem"
+        "action": "restart modem",
+        "result": result
     }
-    return resp
+    return json.dumps(resp)
 
 
 # 系统重启函数
@@ -117,7 +123,16 @@ def reboot():
     resp = {
         "action": "reboot"
     }
-    return resp
+    return json.dumps(resp)
+
+
+@app.route('/modem_state', methods=['POST'])
+def modem_state():
+    result = cmd(state_cmd)
+    resp = {
+        "result": result.split()[0]
+    }
+    return json.dumps(resp)
 
 
 if __name__ == '__main__':
