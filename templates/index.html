@@ -80,10 +80,10 @@
         $.post("/restart_modem",{},function(resp){
             const res = JSON.parse(resp);
             console.log(res.result)
+            alert("已重启modem，关闭窗口将在5秒后刷新页面")
             setTimeout(function () {
                 window.location.reload()
             }, 5000)
-            alert("5秒后将自动刷新页面")
         })
     })
     $('#modem_state').click(function (){
